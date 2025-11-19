@@ -1,7 +1,8 @@
 import puppeteer, { Browser } from "puppeteer";
 import { SunatData } from "../models";
 
-const sunatUrl = "https://e-consultaruc.sunat.gob.pe";
+const sunatUrl =
+  "https://e-consultaruc.sunat.gob.pe/cl-ti-itmrconsruc/FrameCriterioBusquedaWeb.jsp";
 
 let browserPromise: Promise<Browser> | null = null;
 
@@ -9,27 +10,23 @@ async function getBrowser(): Promise<Browser> {
   if (!browserPromise) {
     console.log("💻 - creating browser...");
     browserPromise = puppeteer.launch({
-      headless: true,
+      headless: "new",
       args: ["--no-sandbox", "--disable-setuid-sandbox"],
-      executablePath: puppeteer.executablePath("chrome"),
     });
   }
   return browserPromise;
 }
 
 export async function scrapeSunatByRuc(ruc: string): Promise<SunatData> {
-  const url = `${sunatUrl}/cl-ti-itmrconsruc/FrameCriterioBusquedaWeb.jsp`;
-
   const browser = await getBrowser();
   const page = await browser.newPage();
 
   try {
-    await page.setUserAgent({
-      userAgent:
-        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 " +
-        "(KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
-    });
-    await page.goto(url, {
+    await page.setUserAgent(
+      "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 " +
+        "(KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36"
+    );
+    await page.goto(sunatUrl, {
       waitUntil: "networkidle2",
       timeout: 30000,
     });

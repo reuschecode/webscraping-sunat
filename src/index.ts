@@ -1,9 +1,12 @@
 import express, { Request, Response } from "express";
+import cors from "cors";
 import { scrapeSunatByRuc } from "./services";
 import { isValidRuc } from "./config/utils";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+app.use(cors());
 
 app.get("/api/sunat/validate-ruc/:ruc", async (req: Request, res: Response) => {
   const { ruc } = req.params;
